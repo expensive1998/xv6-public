@@ -4,5 +4,6 @@ struct rtcdate {
   uint hour;
   uint day;
   uint month;
+  
   uint year;
 };
