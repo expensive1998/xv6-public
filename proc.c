@@ -14,6 +14,12 @@ struct {
 
 static struct proc *initproc;
 
+struct proc_info
+{
+  int pid;
+  int memsize;
+}; 
+
 int nextpid = 1;
 extern void forkret(void);
 extern void trapret(void);
@@ -550,7 +556,7 @@ procs(void)
     }    
   }
   
-    for (int i = 0; i < NPROC; i++) 
+    fo r (int i = 0; i < NPROC; i++) 
   {
     for (int j = i+1; j < NPROC; j++)
     {
@@ -565,7 +571,7 @@ procs(void)
         proccesses[i].memsize = proccesses[j].memsize;
 
         proccesses[j].pid = temporary_file.pid;
-        proccesses[j].memsize = temporary_file.memsize;
+        proccesses [j].memsize = temporary_file.memsize;
       }
     }
   }
