@@ -550,5 +550,25 @@ procs(void)
     }    
   }
   
+    for (int i = 0; i < NPROC; i++) 
+  {
+    for (int j = i+1; j < NPROC; j++)
+    {
+      if (proccess[i].memsize < proccess[j].memsize)
+      {
+        struct proc_info temporary_file;
+
+        temporary_file.pid = proccesses[i].pid;
+        temporary_file.memsize = proccesses[i].memsize;
+
+        proccesses[i].pid = proccesses[j].pid;
+        proccesses[i].memsize = proccesses[j].memsize;
+
+        proccesses[j].pid = temporary_file.pid;
+        proccesses[j].memsize = temporary_file.memsize;
+      }
+    }
+  }
+
   return total_count;
 } 
