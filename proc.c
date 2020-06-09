@@ -532,3 +532,23 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+int
+procs(void)
+{
+  struct proc *d;
+  int maximum ;
+  int total_count = 0;
+  struct proc_info *proccesses;
+  argint(0, &maximum);
+  argptr(1, (char **)&proccesses, maximum*sizeof(struct proc_info));
+  for(d = ptable.proc; d < &ptable.proc[NPROC]; d++){
+    if(d->state == RUNNABLE || d->state == RUNNING){
+      proccesses[total_count].pid = d->pid;
+      proccesses[total_count].memsize = d->sz;
+      total_count ++;
+    }    
+  }
+  
+  return total_count;
+} 
