@@ -546,6 +546,7 @@ procs(void)
   int maximum ;
   int total_count = 0;
   struct proc_info *proccesses;
+  //get runnable process's total count
   argint(0, &maximum);
   argptr(1, (char **)&proccesses, maximum*sizeof(struct proc_info));
   for(d = ptable.proc; d < &ptable.proc[NPROC]; d++){
@@ -555,8 +556,8 @@ procs(void)
       total_count ++;
     }    
   }
-  
-    fo r (int i = 0; i < NPROC; i++) 
+  //sort array of runnable processes
+    for (int i = 0; i < NPROC; i++) 
   {
     for (int j = i+1; j < NPROC; j++)
     {
@@ -571,7 +572,7 @@ procs(void)
         proccesses[i].memsize = proccesses[j].memsize;
 
         proccesses[j].pid = temporary_file.pid;
-        proccesses [j].memsize = temporary_file.memsize;
+        proccesses[j].memsize = temporary_file.memsize;
       }
     }
   }
