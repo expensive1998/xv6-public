@@ -318,6 +318,47 @@ wait(void)
   }
 }
 
+int
+waitx(int *wtime, int *rtime)
+{
+  struct proc *process;
+  int havekids, pid;
+  struct  proc *curproc = myproc();
+  acquire(&ptable.lock);
+  while (true)
+  {
+    havekids = 0;
+    for (process=ptable.proc; process < &ptable.proc[NPROC]; process++)
+    {
+      if(process->parent != curproc)
+        continue;
+      havekids = 1;
+      if (process->state == ZOMBIE)
+      {
+        *wtime = process->etime - process->stime - process->rtime - process->iotime;
+        *rtime = process->rtime;
+        pid = process->pid;
+        kfree(process->kstack);
+        process->kstack = 0;
+        freevm(process->pgdir);
+        process->state = UNUSED;
+        process->pid = 0;
+        process->parent = 0;
+        process->name[0] = 0;
+        process->killed = 0;
+        release(&ptable.lock);
+        return pid;
+      }  
+    }
+    if (havekids == 0 || curproc->killed == 1){
+      release(&ptable.lock);
+      return -1;
+    }
+
+    sleep(curproc, &ptable.lock);
+  }
+
+}
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
 // Each CPU calls scheduler() after setting itself up.
