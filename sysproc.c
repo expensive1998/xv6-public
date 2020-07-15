@@ -104,6 +104,7 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+//get argument from user mode function
 int
 sys_set_priority(void)
 {

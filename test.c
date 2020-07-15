@@ -17,7 +17,9 @@ int main(int argc, char *argv[])
         printf(1, "child created with pid %d\n", getpid());
     }
     else
-    {   int loopC = 0;
+    {   
+        //delay for parent to wait for child
+        int loopC = 0;
         while(loopC < 1085)
         {
             printf(1, "%d",loopC);

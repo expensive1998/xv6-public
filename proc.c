@@ -112,11 +112,12 @@ found:
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
 
+    //initialize persent , end , run and sleep time of process for waitx 
   p->stime = ticks;
   p->etime = 0;
   p->rtime = 0;
   p->iotime = 0;
-  p->priority = 60;
+  p->priority = 60; //initialize priority as 60
   
   return p;
 }
@@ -268,6 +269,7 @@ exit(void)
     }
   }
 
+  //save finish time of process
   curproc->etime = ticks;
   // Jump into the scheduler, never to return.
   curproc->state = ZOMBIE;
@@ -318,7 +320,7 @@ wait(void)
     sleep(curproc, &ptable.lock);  //DOC: wait-sleep
   }
 }
-
+//waitx function 
 int
 waitx(int *wtime, int *rtime)
 {
@@ -336,6 +338,7 @@ waitx(int *wtime, int *rtime)
       havekids = 1;
       if (process->state == ZOMBIE)
       {
+        //calculate wait and run time
         *wtime = process->etime - process->stime - process->rtime - process->iotime;
         *rtime = process->rtime;
         pid = process->pid;
@@ -378,6 +381,9 @@ scheduler(void)
   for(;;){
     // Enable interrupts on this processor.
     sti();
+
+
+    //priority scheduling
     struct proc *HP;
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
@@ -393,7 +399,7 @@ scheduler(void)
         if(HP->priority > SHPP->priority)
           HP = SHPP;  
       }
-      p = HP;
+      p = HP; //high priority process
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it

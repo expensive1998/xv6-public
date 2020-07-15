@@ -49,7 +49,7 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
-  int stime, etime, rtime, iotime;
+  int stime, etime, rtime, iotime; // for waitx function
   int priority;
 };
 

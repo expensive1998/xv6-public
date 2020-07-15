@@ -53,6 +53,7 @@ trap(struct trapframe *tf)
       ticks++;
       wakeup(&ticks);
       release(&tickslock);
+      //calculate and add run and sleep time
       if (myproc())
       {
         if(myproc()->state == RUNNING)
