@@ -112,8 +112,14 @@ found:
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
 
+  p->stime = ticks;
+  p->etime = 0;
+  p->rtime = 0;
+  p->iotime = 0;
+  
   return p;
 }
+
 
 //PAGEBREAK: 32
 // Set up first user process.
