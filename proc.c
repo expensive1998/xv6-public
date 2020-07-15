@@ -116,6 +116,7 @@ found:
   p->etime = 0;
   p->rtime = 0;
   p->iotime = 0;
+  p->priority = 60;
   
   return p;
 }
@@ -325,7 +326,7 @@ waitx(int *wtime, int *rtime)
   int havekids, pid;
   struct  proc *curproc = myproc();
   acquire(&ptable.lock);
-  while (true)
+  while (1 == 1)
   {
     havekids = 0;
     for (process=ptable.proc; process < &ptable.proc[NPROC]; process++)
@@ -370,19 +371,29 @@ waitx(int *wtime, int *rtime)
 void
 scheduler(void)
 {
-  struct proc *p;
+  struct proc *p, *SHPP;
   struct cpu *c = mycpu();
   c->proc = 0;
   
   for(;;){
     // Enable interrupts on this processor.
     sti();
-
+    struct proc *HP;
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
     for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
       if(p->state != RUNNABLE)
         continue;
+
+          HP = p;
+      for (SHPP = ptable.proc; SHPP < &ptable.proc[NPROC]; SHPP++)
+      {
+        if (SHPP->state != RUNNABLE)
+          continue;
+        if(HP->priority > SHPP->priority)
+          HP = SHPP;  
+      }
+      p = HP;
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
@@ -579,4 +590,22 @@ procdump(void)
     }
     cprintf("\n");
   }
+}
+
+int
+set_priority(int pid, int value){
+  struct proc *p;
+  int old_priority = -1;
+  acquire(&ptable.lock);
+  for (p  = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->pid == pid)
+    {
+      old_priority = p->priority;
+      p->priority = value;
+      break;
+    }
+  }
+  release(&ptable.lock);
+  return old_priority;
 }
